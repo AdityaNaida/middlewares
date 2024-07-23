@@ -7,6 +7,14 @@ const app = express();
 //     return next();
 // })
 
+// app.use("/api", (req, res, next) => {
+//     const { token } = req.query;
+//     if (token === "giveaccess") {
+//         next();
+//     }
+//     res.send("ACCESS DENIED!")
+// })
+
 
 app.use("/random", (req, res, next) => {
     console.log("Hey I am only for random!");
@@ -26,6 +34,24 @@ app.get("/", (req, res) => {
 app.get("/random", (req, res) => {
     res.send("this is a random page.")
 })
+
+// passing multiple middlewares
+
+const checkQuerry = (req, res, next) => {
+    const { token } = req.query;
+    if (token === "giveaccess") {
+        next();
+    }
+    throw new Error("ACCESS DENIED!")
+}
+
+app.get("/api",checkQuerry, (req, res) => {
+    res.send("data");
+})
+
+// app.get("/wrong", (req, res) => {
+//     abcd = abcd;
+// })
 
 //404
 app.use((req, res) => {
